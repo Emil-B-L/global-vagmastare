@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Global Vågmästare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0D1B2A;
+    --navy-mid: #162638;
+    --navy-light: #1E3450;
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --cream: #F0EBE0;
+    --muted: #8BA3B8;
+    --text: #D6E4F0;
+    --green: #4CAF7D;
+    --red: #E05C5C;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 3rem 1.5rem 2rem;
+    text-align: center;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    position: relative;
+    background: linear-gradient(180deg, #0a1520 0%, var(--navy) 100%);
+  }
+
+  .balance-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 1.5rem;
+    animation: tilt 4s ease-in-out infinite;
+  }
+
+  @keyframes tilt {
+    0%, 100% { transform: rotate(-4deg); }
+    50% { transform: rotate(4deg); }
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    color: var(--cream);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .subtitle {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 0.5rem;
+  }
+
+  /* ── NAV ── */
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+    padding: 1rem 1rem;
+    flex-wrap: wrap;
+    background: var(--navy-mid);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+  }
+
+  nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-family: 'IBM Plex Mono', monospace;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+
+  nav a:hover {
+    color: var(--gold);
+    background: rgba(201,168,76,0.1);
+  }
+
+  /* ── MAIN ── */
+  main { max-width: 900px; margin: 0 auto; padding: 0 1rem 4rem; }
+
+  section { padding: 3rem 0 1rem; }
+
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    color: var(--cream);
+    margin-bottom: 1.5rem;
+  }
+
+  /* ── KPI GRID ── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  @media (min-width: 600px) {
+    .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .kpi {
+    background: var(--navy-mid);
+    padding: 1.25rem 1rem;
+    text-align: center;
+    transition: background 0.2s;
+  }
+
+  .kpi:hover { background: var(--navy-light); }
+
+  .kpi-value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    font-weight: 500;
+    color: var(--gold-light);
+    display: block;
+    line-height: 1;
+  }
+
+  .kpi-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-top: 0.4rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── SCENARIO BAR ── */
+  .scenario-bar {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .scenario {
+    padding: 1rem 0.5rem;
+    text-align: center;
+    background: var(--navy-mid);
+  }
+
+  .scenario.current { background: var(--navy-light); }
+
+  .scenario-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: block;
+  }
+
+  .scenario-val.neg { color: var(--red); }
+  .scenario-val.pos-low { color: #8BA3B8; }
+  .scenario-val.pos-med { color: var(--gold); }
+  .scenario-val.pos-high { color: var(--green); }
+
+  .scenario-name {
+    font-size: 0.6rem;
+    color: var(--muted);
+    margin-top: 0.3rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* ── FONDER TABLE ── */
+  .funds-list { display: flex; flex-direction: column; gap: 1px; }
+
+  .fund-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 1rem;
+    background: var(--navy-mid);
+    padding: 0.9rem 1rem;
+    border-radius: 0;
+    transition: background 0.15s;
+  }
+
+  .fund-row:first-child { border-radius: 8px 8px 0 0; }
+  .fund-row:last-child { border-radius: 0 0 8px 8px; }
+  .fund-row:hover { background: var(--navy-light); }
+
+  .fund-name {
+    font-size: 0.85rem;
+    color: var(--cream);
+    font-weight: 400;
+  }
+
+  .fund-weight {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  .fund-return {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  .fund-return.pos { color: var(--green); }
+  .fund-return.neg { color: var(--red); }
+
+  /* Weight bar */
+  .weight-bar-wrap {
+    height: 4px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 2px;
+    margin-top: 0.35rem;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .weight-bar {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 2px;
+    opacity: 0.6;
+  }
+
+  /* ── AVKASTNING CHART ── */
+  .year-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  @media (min-width: 600px) {
+    .year-grid { grid-template-columns: repeat(5, 1fr); }
+  }
+
+  .year-cell {
+    background: var(--navy-mid);
+    padding: 1rem 0.5rem;
+    text-align: center;
+    transition: background 0.15s;
+  }
+
+  .year-cell:hover { background: var(--navy-light); }
+
+  .year-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+
+  .year-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1rem;
+    font-weight: 500;
+    display: block;
+  }
+
+  .year-val.pos { color: var(--green); }
+  .year-val.neg { color: var(--red); }
+
+  /* Bar vis */
+  .mini-bar {
+    margin: 0.4rem auto 0;
+    width: 4px;
+    border-radius: 2px;
+  }
+
+  .mini-bar.pos { background: var(--green); }
+  .mini-bar.neg { background: var(--red); }
+
+  /* ── KORRELATION ── */
+  .corr-note {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+  }
+
+  .corr-table-wrap { overflow-x: auto; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+  }
+
+  th {
+    background: var(--navy-light);
+    color: var(--gold);
+    padding: 0.5rem 0.4rem;
+    text-align: center;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  th:first-child { text-align: left; }
+
+  td {
+    padding: 0.45rem 0.4rem;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  td:first-child {
+    text-align: left;
+    color: var(--cream);
+    font-size: 0.6rem;
+    white-space: nowrap;
+  }
+
+  tr:hover td { background: rgba(201,168,76,0.05); }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--muted);
+    font-size: 0.7rem;
+    border-top: 1px solid rgba(201,168,76,0.1);
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  .gold-divider {
+    width: 40px;
+    height: 2px;
+    background: var(--gold);
+    margin: 0 auto 1.5rem;
+    opacity: 0.5;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <!-- Animated balance scale SVG -->
+  <div class="balance-icon">
+    <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="30" y1="8" x2="30" y2="52" stroke="#C9A84C" stroke-width="2"/>
+      <line x1="10" y1="8" x2="50" y2="8" stroke="#C9A84C" stroke-width="2"/>
+      <line x1="10" y1="8" x2="10" y2="20" stroke="#C9A84C" stroke-width="1.5"/>
+      <line x1="50" y1="8" x2="50" y2="20" stroke="#C9A84C" stroke-width="1.5"/>
+      <ellipse cx="10" cy="22" rx="8" ry="4" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+      <ellipse cx="50" cy="22" rx="8" ry="4" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+      <polygon points="27,52 33,52 30,56" fill="#C9A84C"/>
+    </svg>
+  </div>
+  <div class="subtitle">Fondportfölj · 10 Fonder</div>
+  <h1>Global Vågmästare</h1>
+  <p style="color:var(--muted);font-size:0.8rem;margin-top:0.75rem;">Analysdatum: Juni 2026 &nbsp;·&nbsp; Historik: 2016–2025</p>
+</header>
+
+<nav>
+  <a href="#oversikt">Översikt</a>
+  <a href="#fonder">Fonder</a>
+  <a href="#avkastning">Avkastning</a>
+  <a href="#korrelation">Korrelation</a>
+</nav>
+
+<main>
+
+  <!-- ÖVERSIKT -->
+  <section id="oversikt">
+    <div class="section-label">Portföljöversikt</div>
+    <h2>Nyckeltal</h2>
+
+    <div class="kpi-grid">
+      <div class="kpi">
+        <span class="kpi-value">12,99%</span>
+        <div class="kpi-label">CAGR (10 år)</div>
+      </div>
+      <div class="kpi">
+        <span class="kpi-value">239%</span>
+        <div class="kpi-label">Total­avkastning</div>
+      </div>
+      <div class="kpi">
+        <span class="kpi-value">0,75</span>
+        <div class="kpi-label">Sharpe Ratio</div>
+      </div>
+      <div class="kpi">
+        <span class="kpi-value">13,90%</span>
+        <div class="kpi-label">Förväntad risk</div>
+      </div>
+      <div class="kpi">
+        <span class="kpi-value">12,87%</span>
+        <div class="kpi-label">Förv. avkastning</div>
+      </div>
+      <div class="kpi">
+        <span class="kpi-value">0,90%</span>
+        <div class="kpi-label">Avgift/år</div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:2rem;">Scenarioanalys · 10 år</div>
+    <div class="scenario-bar">
+      <div class="scenario">
+        <span class="scenario-val neg">−14,94%</span>
+        <div class="scenario-name">Mycket dåligt</div>
+      </div>
+      <div class="scenario">
+        <span class="scenario-val neg">−1,03%</span>
+        <div class="scenario-name">Dåligt</div>
+      </div>
+      <div class="scenario current">
+        <span class="scenario-val pos-med">12,87%</span>
+        <div class="scenario-name">Medel</div>
+      </div>
+      <div class="scenario">
+        <span class="scenario-val pos-high">26,77%</span>
+        <div class="scenario-name">Bra</div>
+      </div>
+      <div class="scenario">
+        <span class="scenario-val pos-high">40,68%</span>
+        <div class="scenario-name">Mycket bra</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FONDER -->
+  <section id="fonder">
+    <div class="gold-divider"></div>
+    <div class="section-label">Innehav</div>
+    <h2>Portföljens 10 Fonder</h2>
+    <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;">Sorterat efter vikt. Medel­avkastning och avgift per fond.</p>
+
+    <div class="funds-list">
+
+      <!-- Handelsbanken USA Index 21% -->
+      <div class="fund-row">
+        <div>
+          <div class="fund-name">Handelsbanken USA Index (A1 SEK)</div>
+          <div class="weight-bar-wrap"><div class="weight-bar" style="width:21%"></div></div>
+        </div>
+        <span class="fund-weight">21%</span>
+        <span class="fund-return pos">+18,61%</span>
+      </div>
+
+      <!-- Handelsbanken Europa Index 16% -->
+      <div class="fund-row">
+        <div>
+          <div class="fund-name">Handelsbanken Europa Index (A1 SEK)</div>
+          <div class="weight-bar-wrap"><div class="weight-bar" style="width:16%"></div></div>
+        </div>
+        <span class="fund-weight">16%</span>
+        <span class="fund-return pos">+9,75%</span>
+      </div>
+
+      <!-- Finserve 14% -->
+      <div class="fund-row">
+        <div>
+          <div class="fund-name">Finserve Global Security Fund I SEK R</div>
+          <div class="weight-bar-wrap"><div class="weight-bar" style="width:14%"></div></div>
+        </div>
+        <span class="fund-weight">14%</span>
+        <span class="fund-return pos">+12,96%</span>
+      </div>
+
+      <!-- Tillväxtmarknad 13% -->
+      <div class="fund-row">
+        <div>
+          <div class="fund-name">Handelsbanken Tillväxtmarknad Tema (A1 SEK)</div>
+          <div class="weight-bar-wrap"><div class="weight-bar" style="width:13%"></div></div>
+        </div>
+        <span class="fund-weight">13%</span>
+        <span class="fund-return pos">+9,84%</span>
+      </div>
+
+      <!-- Spiltan Investmentbolag 11% -->
+      <div class="fund-row">
+        <div>
+          <div class="fund-name">Spiltan Aktiefond Investmentbolag</div>
+          <div class="weight-bar-wrap"><div class="weight-bar" style="width:11%"></div></div>
+        </div>
+        <span class="fund-weight">11%</span>
+        <span class="fund-return pos">+15,50%</span>
+      </div>
+
+      <!-- Avanza Zero 9% -->
+      <div class="fund-row">
+        <div>
+          <div class="fund-name">Avanza Zero</div>
+          <div class="weight-bar-wrap"><div class="weight-bar" style="width:9%"></div></div>
+        </div>
+        <span class="fund-weight">9%</span>
+        <span class="fund-return pos">+10,58%</span>
+      </div>
+
+      <!-- Carnegie 6% -->
+      <div class="fund-row">
+        <div>
+          <div class="fund-name">Carnegie US Small &amp; Micro Cap</div>
+          <div class="weight-bar-wrap"><div class="weight-bar" style="width:6%"></div></div>
+        </div>
+        <span class="fund-weight">6%</span>
+        <span class="fund-return pos">+13,23%</span>
+      </div>
+
+      <!-- Spiltan Småbolag 5% -->
+      <div class="fund-row">
+        <div>
+          <div class="fund-name">Spiltan Småbolag</div>
+          <div class="weight-bar-wrap"><div class="weight-bar" style="width:5%"></div></div>
+        </div>
+        <span class="fund-weight">5%</span>
+        <span class="fund-return pos">+17,12%</span>
+      </div>
+
+      <!-- Robeco 3% -->
+      <div class="fund-row">
+        <div>
+          <div class="fund-name">Robeco Smart Energy D-EUR Capitalisation</div>
+          <div class="weight-bar-wrap"><div class="weight-bar" style="width:3%"></div></div>
+        </div>
+        <span class="fund-weight">3%</span>
+        <span class="fund-return pos">+15,32%</span>
+      </div>
+
+      <!-- Gold 2% -->
+      <div class="fund-row">
+        <div>
+          <div class="fund-name">BGF World Gold Fund A2</div>
+          <div class="weight-bar-wrap"><div class="weight-bar" style="width:2%"></div></div>
+        </div>
+        <span class="fund-weight">2%</span>
+        <span class="fund-return pos">+25,09%</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- AVKASTNING PER ÅR -->
+  <section id="avkastning">
+    <div class="gold-divider"></div>
+    <div class="section-label">Historisk avkastning</div>
+    <h2>Portföljen År för År</h2>
+    <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;">Total portföljens årsavkastning 2016–2025.</p>
+
+    <div class="year-grid">
+      <div class="year-cell">
+        <span class="year-label">2016</span>
+        <span class="year-val pos">+13%</span>
+        <div class="mini-bar pos" style="height:26px;"></div>
+      </div>
+      <div class="year-cell">
+        <span class="year-label">2017</span>
+        <span class="year-val pos">+15%</span>
+        <div class="mini-bar pos" style="height:30px;"></div>
+      </div>
+      <div class="year-cell">
+        <span class="year-label">2018</span>
+        <span class="year-val neg">−6%</span>
+        <div class="mini-bar neg" style="height:12px;"></div>
+      </div>
+      <div class="year-cell">
+        <span class="year-label">2019</span>
+        <span class="year-val pos">+34%</span>
+        <div class="mini-bar pos" style="height:50px;"></div>
+      </div>
+      <div class="year-cell">
+        <span class="year-label">2020</span>
+        <span class="year-val pos">+8%</span>
+        <div class="mini-bar pos" style="height:16px;"></div>
+      </div>
+      <div class="year-cell">
+        <span class="year-label">2021</span>
+        <span class="year-val pos">+29%</span>
+        <div class="mini-bar pos" style="height:44px;"></div>
+      </div>
+      <div class="year-cell">
+        <span class="year-label">2022</span>
+        <span class="year-val neg">−9%</span>
+        <div class="mini-bar neg" style="height:18px;"></div>
+      </div>
+      <div class="year-cell">
+        <span class="year-label">2023</span>
+        <span class="year-val pos">+17%</span>
+        <div class="mini-bar pos" style="height:34px;"></div>
+      </div>
+      <div class="year-cell">
+        <span class="year-label">2024</span>
+        <span class="year-val pos">+20%</span>
+        <div class="mini-bar pos" style="height:40px;"></div>
+      </div>
+      <div class="year-cell">
+        <span class="year-label">2025</span>
+        <span class="year-val pos">+16%</span>
+        <div class="mini-bar pos" style="height:32px;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KORRELATION -->
+  <section id="korrelation">
+    <div class="gold-divider"></div>
+    <div class="section-label">Diversifiering</div>
+    <h2>Korrelationsmatris</h2>
+    <p class="corr-note">
+      Värden nära <strong style="color:var(--red)">1,0</strong> = rör sig lika (lägre diversifiering). Värden nära <strong style="color:var(--green)">0</strong> eller negativa = rör sig olika (bättre diversifiering). BGF Gold och Carnegie US Small &amp; Micro Cap har negativ korrelation (−0,41) – ett bra skydd.
+    </p>
+
+    <div class="corr-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Fond</th>
+            <th>AZ</th>
+            <th>CAR</th>
+            <th>FIN</th>
+            <th>HEU</th>
+            <th>HUS</th>
+            <th>SAI</th>
+            <th>SSM</th>
+            <th>HTM</th>
+            <th>RSE</th>
+            <th>BGF</th>
+          </tr>
+        </thead>
+        <tbody id="corr-body"></tbody>
+      </table>
+    </div>
+
+    <p style="font-size:0.65rem;color:var(--muted);margin-top:0.75rem;">AZ=Avanza Zero, CAR=Carnegie US, FIN=Finserve, HEU=HB Europa, HUS=HB USA, SAI=Spiltan Inv, SSM=Spiltan Små, HTM=HB Tillväxt, RSE=Robeco Energy, BGF=Gold Fund</p>
+  </section>
+
+</main>
+
+<footer>
+  Global Vågmästare &nbsp;·&nbsp; Data 2016–2025 &nbsp;·&nbsp; Historisk avkastning garanterar inte framtida resultat
+</footer>
+
+<script>
+  // Correlation matrix data
+  const funds = ["AZ","CAR","FIN","HEU","HUS","SAI","SSM","HTM","RSE","BGF"];
+  const corr = [
+    [1.00, 0.89, 0.53, 0.91, 0.89, 0.95, 0.80, 0.43, 0.72, 0.33],
+    [0.89, 1.00, 0.77, 0.93, 0.93, 0.74, 0.54, 0.50, 0.27,-0.41],
+    [0.53, 0.77, 1.00, 0.63, 0.63, 0.39, 0.18, 0.73, 0.27, 0.56],
+    [0.91, 0.93, 0.63, 1.00, 0.88, 0.79, 0.57, 0.58, 0.54, 0.17],
+    [0.89, 0.93, 0.63, 0.88, 1.00, 0.83, 0.74, 0.45, 0.49,-0.17],
+    [0.95, 0.74, 0.39, 0.79, 0.83, 1.00, 0.94, 0.44, 0.86, 0.92],
+    [0.80, 0.54, 0.18, 0.57, 0.74, 0.94, 1.00, 0.28, 0.85,-0.03],
+    [0.43, 0.50, 0.73, 0.58, 0.45, 0.44, 0.28, 1.00, 0.46, 0.30],
+    [0.72, 0.27, 0.27, 0.54, 0.49, 0.86, 0.85, 0.46, 1.00, 0.35],
+    [0.33,-0.41, 0.56, 0.17,-0.17, 0.92,-0.03, 0.30, 0.35, 1.00],
+  ];
+
+  function corrColor(v) {
+    if (v === 1.00) return 'var(--muted)';
+    if (v < 0) return 'var(--green)';
+    if (v < 0.4) return '#7EC8A0';
+    if (v < 0.7) return 'var(--cream)';
+    if (v < 0.85) return '#E8C97A';
+    return 'var(--red)';
+  }
+
+  const tbody = document.getElementById('corr-body');
+  corr.forEach((row, i) => {
+    const tr = document.createElement('tr');
+    const tdLabel = document.createElement('td');
+    tdLabel.textContent = funds[i];
+    tr.appendChild(tdLabel);
+    row.forEach((val, j) => {
+      const td = document.createElement('td');
+      td.textContent = val.toFixed(2);
+      td.style.color = corrColor(val);
+      if (i === j) td.style.opacity = '0.3';
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+</script>
+
+</body>
+</html>
